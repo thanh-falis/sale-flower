@@ -19,7 +19,7 @@ Route::get('/', [
     'uses'=>'PageController@Index'
 ]);
 
-Route::get('loai-san-pham',[
+Route::get('loai-san-pham/{type}',[
     'as' => 'loaisanpham',
     'uses' => 'PageController@Loaisanpham'
 ]);
