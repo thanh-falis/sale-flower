@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Slide;
 use App\Product;
 use App\ProductType;
+use App\Cart;
+use Session;
 
 class PageController extends Controller
 {
@@ -29,9 +31,11 @@ class PageController extends Controller
         return view('pages.loaisanpham',['Type'=>$Type, 'other_product'=>$other_product]);
     }
 
-    public function ChitietSP()
+    public function ChitietSP(Request $req)
     {
-        return view('pages.chitiet_sanpham');
+        $product = Product::where('id',$req->id)->first();
+        $similar_product = Product::where('id_type', $product->id_type)->paginate(3);
+        return view('pages.chitiet_sanpham',['product' => $product, 'similar_product' => $similar_product]);
     }
 
     public function Lienhe()
@@ -42,5 +46,17 @@ class PageController extends Controller
     public function Gioithieu()
     {
         return view('pages.gioithieu');
+    }
+
+    public function Addcart(Request $request, $id)
+    {
+        $Product = Product::find($id);
+        //echo '<pre>'; print_r($Product);exit;
+        $oldCart = Session('cart')?Session::get('cart'):null;
+        $cart = new Cart($oldCart);
+        $cart->add($Product, $id);//print_r($cart);exit;
+        $request->session->put('cart',$cart);
+        
+        return redirect()->back();
     }
 }

@@ -7,7 +7,7 @@
 			</div>
 			<div class="pull-right">
 				<div class="beta-breadcrumb font-large">
-					<a href="index.html">Home</a> / <span>Sản phẩm</span>
+					<a href="/">Home</a> / <span>Sản phẩm</span>
 				</div>
 			</div>
 			<div class="clearfix"></div>
@@ -59,7 +59,7 @@
 										<div class="ribbon-wrapper"><div class="ribbon sale">Sale</div></div>
 									@endif
 										<div class="single-item-header">
-											<a href="product.html"><img src="source/image/product/{{$product_type->image}}" alt=""></a>
+											<a href="chi-tiet-san-pham/{{$product_type->id}}"><img src="source/image/product/{{$product_type->image}}" alt=""></a>
 										</div>
 										<div class="single-item-body">
 											<p class="single-item-title">{{$product_type->name}}</p>
@@ -73,8 +73,8 @@
 											</p>
 										</div>
 										<div class="single-item-caption">
-											<a class="add-to-cart pull-left" href="shopping_cart.html"><i class="fa fa-shopping-cart"></i></a>
-											<a class="beta-btn primary" href="product.html">Details <i class="fa fa-chevron-right"></i></a>
+											<a class="add-to-cart pull-left" href="{{route('themgiohang', $product_type->id)}}"><i class="fa fa-shopping-cart"></i></a>
+											<a class="beta-btn primary" href="{{route('chitietsanpham', $product_type->id)}}">Details <i class="fa fa-chevron-right"></i></a>
 											<div class="clearfix"></div>
 										</div>
 									</div>
@@ -99,7 +99,7 @@
 										<div class="ribbon-wrapper"><div class="ribbon sale">Sale</div></div>
 									@endif
 										<div class="single-item-header">
-											<a href="product.html"><img src="source/image/product/{{$other->image}}" alt=""></a>
+											<a href="chi-tiet-san-pham/{{$other->id}}"><img src="source/image/product/{{$other->image}}" alt=""></a>
 										</div>
 										<div class="single-item-body">
 											<p class="single-item-title">{{$other->name}}</p>

@@ -24,7 +24,7 @@ Route::get('loai-san-pham/{type}',[
     'uses' => 'PageController@Loaisanpham'
 ]);
 
-Route::get('chi-tiet-san-pham',[
+Route::get('chi-tiet-san-pham/{id}',[
     'as' => 'chitietsanpham',
     'uses' => 'PageController@ChitietSP'
 ]);
@@ -37,4 +37,9 @@ Route::get('lien-he',[
 Route::get('gioi-thieu',[
     'as' => 'gioithieu',
     'uses' => 'PageController@Gioithieu'
+]);
+
+Route::get('add-to-cart/{id}',[
+    'as'=>'themgiohang',
+    'uses'=>'PageController@Addcart'
 ]);
