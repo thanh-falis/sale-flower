@@ -35,20 +35,24 @@
 						<div class="cart">
 							<div class="beta-select">
 								<i class="fa fa-shopping-cart"></i> 
-							Giỏ hàng (
-								@if(Session::has('cart')) 
-									{{Session('cart')->totalQty}}
-								@else Trống
+							Giỏ hàng (@if(Session::has('cart')) {{Session('cart')->totalQty}}@else {{!! Trống !!}}
 								@endif) 
 								<i class="fa fa-chevron-down"></i></div>
 							<div class="beta-dropdown cart-body">
 								@foreach($product_cart as $product)
 									<div class="cart-item">
+										<a class="cart-item-delete" href="{{route('xoagiohang',$product['item']['id'])}}"><i class="fa fa-times"></i></i></a>
 										<div class="media">
-											<a class="pull-left" href="#"><img src="source/image/product/{{$product['item'][image]}}" alt=""></a>
+											<a class="pull-left" href="#"><img src="source/image/product/{{$product['item']['image']}}" alt=""></a>
 											<div class="media-body">
-												<span class="cart-item-title">{{$product['item'][name]}}</span>
-												<span class="cart-item-amount">{{$product['qty']}}<span>{{$product['item']['unit_price']}}</span></span>
+												<span class="cart-item-title">{{$product['item']['name']}}</span>
+												<span class="cart-item-amount">{{$product['qty']}}*<span>
+													@if($product['item']['promotion_price'] == 0) 
+														{{number_format($product['item']['unit_price'])}}
+													@else
+														{{number_format($product['item']['promotion_price'])}}
+													@endif
+												</span></span>
 											</div>
 										</div>
 									</div>
@@ -56,6 +60,32 @@
 								
 								<div class="cart-caption">
 									<div class="cart-total text-right">Tổng tiền: <span class="cart-total-value">{{Session('cart')->totalPrice}}</span></div>
+									<div class="clearfix"></div>
+
+									<div class="center">
+										<div class="space10">&nbsp;</div>
+										<a href="{{route('dathang')}}" class="beta-btn primary text-center">Đặt hàng <i class="fa fa-chevron-right"></i></a>
+									</div>
+								</div>
+							</div>
+						</div> <!-- .cart -->
+						@else
+						<div class="cart">
+							<div class="beta-select">
+								<i class="fa fa-shopping-cart"></i> Giỏ hàng ( Trống ) 
+								<i class="fa fa-chevron-down"></i></div>
+							<div class="beta-dropdown cart-body">
+									<div class="cart-item">
+										<div class="media">
+											<a class="pull-left" href="#"><img src="" alt=""></a>
+											<div class="media-body">
+												<span class="cart-item-title"></span>
+												<span class="cart-item-amount"></span></span>
+											</div>
+										</div>
+									</div>
+								<div class="cart-caption">
+									<div class="cart-total text-right">Tổng tiền: <span class="cart-total-value"></span></div>
 									<div class="clearfix"></div>
 
 									<div class="center">
@@ -73,7 +103,6 @@
 		</div> <!-- .header-body -->
 		<div class="header-bottom" style="background-color: #0277b8;">
 			<div class="container">
-				<a class="visible-xs beta-menu-toggle pull-right" href="#"><span class='beta-menu-toggle-text'>Menu</span> <i class="fa fa-bars"></i></a>
 				<div class="visible-xs clearfix"></div>
 				<nav class="main-menu">
 					<ul class="l-inline ov">

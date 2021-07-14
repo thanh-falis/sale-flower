@@ -43,3 +43,18 @@ Route::get('add-to-cart/{id}',[
     'as'=>'themgiohang',
     'uses'=>'PageController@Addcart'
 ]);
+
+Route::get('dell-cart/{id}',[
+    'as'=>'xoagiohang',
+    'uses'=>'PageController@DeleteCart'
+]);
+
+Route::get('dat-hang',[
+    'as'=>'dathang',
+    'uses'=>'PageController@getCheckout'
+]);
+
+Route::post('dat-hang',[
+    'as'=>'dathang',
+    'uses'=>'PageController@postCheckout'
+]);
