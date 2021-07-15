@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Slide;
@@ -10,14 +11,19 @@ use App\Cart;
 use App\Customer;
 use App\Bill;
 use App\BillDetail;
+use App\User;
 use Session;
+use Hash;
 
 class PageController extends Controller
 {
-    // public function __construct()
-    // {
-
-    // }
+    function __construct()
+	{
+		if(Auth::check())
+		{
+			view()->share('login',Auth::user());
+		}
+	}
 
     public function Index()
     {
@@ -91,21 +97,7 @@ class PageController extends Controller
     
     public function postCheckout(Request $req)
     {
-        // $this->validate($req,[
-        //     'name'=>'require',
-        //     'email'=>'required',
-        //     'address'=>'require',
-        //     'phone'=>'require'
-        //     ],
-        //     [
-        //     'name.request'=>'Bạn Chưa Nhập Họ Tên',
-        //     'email.request'=>'Bạn Chưa Nhập Email',
-        //     'address.request'=>'Bạn Chưa Nhập Địa Chỉ',
-        //     'phone.request'=>'Bạn Chưa Nhập Số Điện Thoại',
-        //     ]);
-
         
-
         $customer = new Customer;
         $customer->name = $req->name;
         $customer->gender = $req->gender;
@@ -136,4 +128,85 @@ class PageController extends Controller
         Session::forget('cart');
         return redirect()->back()->with('thongbao', 'Đặt hàng thành công');
     }
+
+    public function getLogin()
+    {
+        return view('pages.login');
+    }
+
+    public function postLogin(Request $req)
+    {
+        $this->validate($req,
+            [
+                'email'=>'required|email',
+                'password'=>'required|min:6|max:20'
+            ],
+            [
+                'email.required'=>'Vui lòng nhập email',
+                'email.email'=>'Không đúng định dạng email',
+                'password.required'=>'Vui vui lòng nhập mật khẩu',
+                'password.min'=>'Mật khẩu ít nhất 6 kí tự',
+                'password.max'=>'Mật khẩu tối đa 20 kí tự'
+            ]
+        );
+
+        if(Auth::attempt(['email'=>$req->email,'password'=>$req->password]))
+        {
+            return redirect('/')->with('thongbao', 'Đăng nhập thành công');
+        }
+        else
+        {
+            return redirect('login')->with('thongbao','Bạn Đăng Nhập Không Thành Công');
+        }
+
+        
+    }
+
+    public function getRegister()
+    {
+         return view('pages.register');
+    }
+
+    public function postRegister(Request $req)
+    {
+        $this->validate($req,
+            [
+                'email'=>'required|email|unique:users,email',
+                'password'=>'required|min:6|max:20',
+                'full_name'=>'required',
+                'repassword'=>'required|same:password'
+            ],
+            [
+                'email.required'=>'Vui lòng nhập email',
+                'email.email'=>'Không đúng định dạng email',
+                'email.unique'=>'Email đã có người sử dụng',
+                'password.required'=>'Vui vui lòng nhập mật khẩu',
+                'repassword.same'=>'Mật khẩu không trùng khớp',
+                'password.min'=>'Mật khẩu ít nhất 6 kí tự',
+                'password.max'=>'Mật khẩu tối đa 20 kí tự'
+            ]
+        );
+
+        $user = new User;
+        $user->full_name = $req->full_name;
+        $user->email = $req->email;
+        $user->password = Hash::make($req->password);
+        $user->phone = $req->phone;
+        $user->address = $req->address;
+        $user->power = $req->power;
+        $user->save();
+        return redirect()->back()->with('success', 'Tạo tài khoản thành công');
+    }
+
+    public function Logout()
+	{
+		Auth::logout();
+		return redirect()->back();
+	}
+    
+    public function Search(Request $req)
+	{
+		$product = Product::where('name','like','%'.$req->key.'%')->orWhere('unit_price',$req->key)->get();
+        return view('pages.search',compact('product'));
+	}
 }
