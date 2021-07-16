@@ -9,7 +9,7 @@
 				</div>
 				<div class="pull-right auto-width-right">
 					<ul class="top-details menu-beta l-inline">
-					@if(!Auth::user())
+					@if(!Auth::guard('customer')->check())
                         <li>
                             <a href="register">Đăng ký</a>
                         </li>
@@ -20,7 +20,7 @@
                         <li>
                             <a href="nguoidung">
                                 <span class ="glyphicon glyphicon-user"></span>
-                                {{Auth::user()->full_name}}
+								{{Auth::guard('customer')->user()->name}}
                             </a>
                         </li>
                         <li>

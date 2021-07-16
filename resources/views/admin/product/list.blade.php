@@ -21,10 +21,10 @@
                                 <th>Mô tả</th>
                                 <th>Giá gốc</th>
                                 <th>Giá giảm</th>
-                                <th>Mô tả</th>
                                 <th>Hình ảnh</th>
                                 <th>Tình trạng</th>
-                                <th>Trạng thái</th>
+                                <th>Sản phẩm mới</th>
+                                <th>Đã Xóa</th>
                                 <th>Xóa</th>
                                 <th>Sửa</th>
                             </tr>

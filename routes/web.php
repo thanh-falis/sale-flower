@@ -20,7 +20,11 @@ Route::get('/', [
 ]);
 
 // Route Admin
-Route::get('/admin', 'HomeController@home');
+Route::get('/admin', 'UserController@getLoginAdmin');
+Route::get('admin/login','UserController@getLoginAdmin');
+Route::post('admin/login','UserController@postLoginAdmin');
+Route::get('admin/logout','UserController@LogoutAdmin');
+
 Route::group(['prefix'=>'admin'], function(){
 
     Route::group(['prefix'=>'producttype'], function(){
@@ -151,3 +155,8 @@ Route::get('search',[
     'as'=>'search',
     'uses'=>'PageController@Search'
 ]);
+
+
+//send mail
+
+Route::get('sendmail', 'PageController@Sendmail');

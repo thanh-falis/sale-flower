@@ -26,8 +26,14 @@
 
                     <div class="form-block">
                         <label for="name">Họ tên*</label>
-                        <input type="text" id="name" name="name" placeholder="Họ tên" required>
+                        <input type="text" id="name" name="name" value="$login->name" required>
                     </div>
+
+                    <div class="form-block">
+                        <label for="name">Email*</label>
+                        <input type="email" id="email" name="email" value="$login->name" required>
+                    </div>
+
                     <div class="form-block">
                         <label>Giới tính </label>
                         <input id="gender" type="radio" class="input-radio" name="gender" value="nam" checked="checked" style="width: 10%"><span style="margin-right: 10%">Nam</span>

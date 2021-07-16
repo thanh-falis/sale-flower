@@ -20,14 +20,14 @@
                             </div>
                         @endif
 
-                        @if(session('thongbao'))
+                        @if(session('message'))
                             <div class="alert alert-success">
                                 {{session('message')}}
                             </div>
                         @endif
                         <form action="admin/product/add" method="POST" enctype="multipart/form-data">
                          <input type="hidden" name="_token" value="{{csrf_token()}}" />
-                         <input type="hidden" name="delete" value="0">
+                         <input type="hidden" name="flag" value="0">
                             
                             <div class="form-group">
                                 <label>Tên Sản Phẩm</label>
@@ -45,7 +45,7 @@
 
                             <div class="form-group">
                                 <label>Mô tả</label>
-                                <textarea class="form-control" name="description" placeholder="Nhập Mô Tả"></textarea>
+                                <textarea class="form-control ckeditor" name="description" placeholder="Nhập Mô Tả"></textarea>
                             </div>
 
                             <div class="form-group">

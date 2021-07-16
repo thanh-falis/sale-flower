@@ -14,14 +14,16 @@ use App\BillDetail;
 use App\User;
 use Session;
 use Hash;
+use Mail;
 
 class PageController extends Controller
 {
     function __construct()
 	{
-		if(Auth::check())
+		if(Auth::guard('customer')->check())
 		{
-			view()->share('login',Auth::user());
+            Auth::guard('customer')->name;
+			view()->share('login',Auth::guard('customer'));
 		}
 	}
 
@@ -84,51 +86,74 @@ class PageController extends Controller
     }
     public function getCheckout()
     {
-        if(Session::has('cart')){
-            $oldcart = Session::get('cart');
-            $cart = new Cart($oldcart);
-            //dd($cart);
-            return view('pages.dat_hang', ['product_cart'=>$cart->items, 'totalPrice'=>$cart->totalPrice, 'totalQty'=>$cart->totalQty]);
-        }
-        else {
-            return view('pages.dat_hang');
+        if(!Auth::guard('customer')->check()){
+            return view('pages.login');
+        } 
+        else
+        {
+            if(Session::has('cart')){
+                $oldcart = Session::get('cart');
+                $cart = new Cart($oldcart);
+                //dd($cart);
+                return view('pages.dat_hang', ['product_cart'=>$cart->items, 'totalPrice'=>$cart->totalPrice, 'totalQty'=>$cart->totalQty]);
+            }
+            else {
+                return view('pages.dat_hang');
+            }
         }
     }
     
     public function postCheckout(Request $req)
     {
         
-        $customer = new Customer;
-        $customer->name = $req->name;
-        $customer->gender = $req->gender;
-        $customer->email = $req->email;
-        $customer->address = $req->address;
-        $customer->phone_number = $req->phone;
-        $customer->note = $req->note;
-        $customer->save();
+            $to_email = $req->email;
 
-        $cart = Session::get('cart');
+            // $customer = new Customer;
+            // $customer->name = $req->name;
+            // $customer->gender = $req->gender;
+            // $customer->email = $req->email;
+            // $customer->address = $req->address;
+            // $customer->phone_number = $req->phone;
+            // $customer->note = $req->note;
+            // $customer->save();
+
+            $cart = Session::get('cart');
+            
+            $bill = new Bill;
+            $bill->id_customer = $customer->id;
+            $bill->date_order = date('Y-m-d');
+            $bill->total = $cart->totalPrice;
+            $bill->payment = $req->payment;
+            $bill->note = $req->note;
+            $bill->save();
+
+            foreach($cart->items as $key => $val){
+                $bill_detail = new BillDetail;
+                $bill_detail->id_bill = $bill->id;
+                $bill_detail->id_product = $key;
+                $bill_detail->quantity = $val['qty'];
+                $bill_detail->unit_price = $val['price']/$val['qty'];
+                $bill_detail->save();
+            }
+            Session::forget('cart');
+            
+            $this->Sendmail($to_email);
+            return redirect()->back()->with('thongbao', 'Đặt hàng thành công, Quý khách vui lòng check Mail');
         
-        $bill = new Bill;
-        $bill->id_customer = $customer->id;
-        $bill->date_order = date('Y-m-d');
-        $bill->total = $cart->totalPrice;
-        $bill->payment = $req->payment;
-        $bill->note = $req->note;
-        $bill->save();
-
-        foreach($cart->items as $key => $val){
-            $bill_detail = new BillDetail;
-            $bill_detail->id_bill = $bill->id;
-            $bill_detail->id_product = $key;
-            $bill_detail->quantity = $val['qty'];
-            $bill_detail->unit_price = $val['price']/$val['qty'];
-            $bill_detail->save();
-        }
-        Session::forget('cart');
-        return redirect()->back()->with('thongbao', 'Đặt hàng thành công');
     }
 
+    public function Sendmail($to_email) {
+         //send mail
+        $to_name = "SunFlower";
+        $data = array("name"=>"Gửi mail đơn hàng","body"=>"Sunflower Đơn hàng đã đặt"); //body of sendmail.blade.php
+    
+        Mail::send('pages.sendmail',$data,function($message) use ($to_name,$to_email){
+            $message->to($to_email)->subject('test mail nhé');//send this mail with subject
+            $message->from($to_email,$to_name);//send from this mail
+        });
+        //--send mail
+    }
+    
     public function getLogin()
     {
         return view('pages.login');
@@ -150,7 +175,7 @@ class PageController extends Controller
             ]
         );
 
-        if(Auth::attempt(['email'=>$req->email,'password'=>$req->password]))
+        if(Auth::guard('customer')->attempt(['email'=>$req->email,'password'=>$req->password]))
         {
             return redirect('/')->with('thongbao', 'Đăng nhập thành công');
         }
@@ -170,38 +195,47 @@ class PageController extends Controller
     public function postRegister(Request $req)
     {
         $this->validate($req,
-            [
-                'email'=>'required|email|unique:users,email',
-                'password'=>'required|min:6|max:20',
-                'full_name'=>'required',
-                'repassword'=>'required|same:password'
-            ],
-            [
-                'email.required'=>'Vui lòng nhập email',
-                'email.email'=>'Không đúng định dạng email',
-                'email.unique'=>'Email đã có người sử dụng',
-                'password.required'=>'Vui vui lòng nhập mật khẩu',
-                'repassword.same'=>'Mật khẩu không trùng khớp',
-                'password.min'=>'Mật khẩu ít nhất 6 kí tự',
-                'password.max'=>'Mật khẩu tối đa 20 kí tự'
-            ]
+        [
+            'name'=>'required',
+            'email'=>'required|unique:customer,email',
+            'password'=>'required|min:6|max:20',
+            'repassword'=>'required|same:password',
+            'address'=>'required',
+            'phone'=>'required'
+        ],
+        [
+            
+            'email.required'=>'Vui lòng nhập email',
+            'email.email'=>'Không đúng định dạng email',
+            'email.unique'=>'Email đã có người sử dụng',
+            'password.required'=>'Vui vui lòng nhập mật khẩu',
+            'repassword.same'=>'Mật khẩu không trùng khớp',
+            'password.min'=>'Mật khẩu ít nhất 6 kí tự',
+            'password.max'=>'Mật khẩu tối đa 20 kí tự',
+            'address.required'=>'Vui lòng nhập địa chỉ chính xác và đầy đủ',
+            'phone.required'=>'Vui lòng nhập số điện thoại'
+        ]
         );
 
-        $user = new User;
-        $user->full_name = $req->full_name;
-        $user->email = $req->email;
-        $user->password = Hash::make($req->password);
-        $user->phone = $req->phone;
-        $user->address = $req->address;
-        $user->power = $req->power;
-        $user->save();
+        $customer = new Customer;
+        $customer->name = $req->name;
+        $customer->gender = $req->gender;        
+        $customer->email = $req->email;
+        $customer->password = Hash::make($req->password);
+        $customer->phone_number = $req->phone;
+        $customer->address = $req->address;
+        $customer->note = $req->note;
+        $customer->save();
         return redirect()->back()->with('success', 'Tạo tài khoản thành công');
     }
 
     public function Logout()
 	{
-		Auth::logout();
-		return redirect()->back();
+        if(Auth::guard('customer')->check())
+        {
+            Auth::guard('customer')->logout();
+            return redirect()->back();
+        }
 	}
     
     public function Search(Request $req)
@@ -209,4 +243,5 @@ class PageController extends Controller
 		$product = Product::where('name','like','%'.$req->key.'%')->orWhere('unit_price',$req->key)->get();
         return view('pages.search',compact('product'));
 	}
+
 }

@@ -45,7 +45,7 @@
                             @if(session('thongbao'))
                                     {{session('thongbao')}}                            
                             @endif
-                        <form role="form" action="admin/dangnhap" method="POST">
+                        <form role="form" action="admin/login" method="POST">
                             <fieldset>
                                 <input type="hidden" name="_token" value="{{csrf_token()}}"/>
                                 <div class="form-group">

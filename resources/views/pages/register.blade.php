@@ -38,33 +38,47 @@
                     <div class="space20">&nbsp;</div>
                     
                     <div class="form-block">
-                        <label for="email">Email address*</label>
+                        <label for="name">Họ tên*</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-block">
+                        <label>Giới tính </label>
+                        <input id="gender" type="radio" class="input-radio" name="gender" value="nam" checked="checked" style="width: 10%"><span style="margin-right: 10%">Nam</span>
+                        <input id="gender" type="radio" class="input-radio" name="gender" value="nữ" style="width: 10%"><span>Nữ</span>
+                                    
+                    </div>
+
+                    <div class="form-block">
+                        <label for="email">Email*</label>
                         <input type="email" id="email" name="email" required>
                     </div>
-
+                    
                     <div class="form-block">
-                        <label for="your_last_name">Fullname*</label>
-                        <input type="text" id="your_last_name" name="full_name" required>
+                        <label for="your_last_name">Mật khẩu*</label>
+                        <input type="password" id="password" name="password" required>
                     </div>
 
                     <div class="form-block">
-                        <label for="adress">Address*</label>
+                        <label for="your_last_name">Nhập lại Mật khẩu*</label>
+                        <input type="password" id="repassword" name="repassword" required>
+                    </div>
+                
+                    <div class="form-block">
+                        <label for="adress">Địa chỉ*</label>
                         <input type="text" id="adress" name="address" placeholder="Street Address" required>
                     </div>
-
 
                     <div class="form-block">
                         <label for="phone">Phone*</label>
                         <input type="text" id="phone" name="phone" required>
                     </div>
+
                     <div class="form-block">
-                        <label for="phone">Password*</label>
-                        <input type="password" id="phone" name="password" required>
+                        <label for="phone">Ghi chú</label>
+                        <input type="text" id="note" name="note">
                     </div>
-                    <div class="form-block">
-                        <label for="phone">Re password*</label>
-                        <input type="password" id="phone" name="repassword" required>
-                    </div>
+
                     <div class="form-block">
                         <button type="submit" class="btn btn-primary">Register</button>
                     </div>
