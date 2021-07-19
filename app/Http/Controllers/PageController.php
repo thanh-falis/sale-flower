@@ -22,7 +22,6 @@ class PageController extends Controller
 	{
 		if(Auth::guard('customer')->check())
 		{
-            Auth::guard('customer')->name;
 			view()->share('login',Auth::guard('customer'));
 		}
 	}
@@ -107,24 +106,16 @@ class PageController extends Controller
     {
         
             $to_email = $req->email;
-
-            // $customer = new Customer;
-            // $customer->name = $req->name;
-            // $customer->gender = $req->gender;
-            // $customer->email = $req->email;
-            // $customer->address = $req->address;
-            // $customer->phone_number = $req->phone;
-            // $customer->note = $req->note;
-            // $customer->save();
-
             $cart = Session::get('cart');
             
             $bill = new Bill;
-            $bill->id_customer = $customer->id;
+            $bill->id_customer = Auth::guard('customer')->user()->id;
             $bill->date_order = date('Y-m-d');
             $bill->total = $cart->totalPrice;
             $bill->payment = $req->payment;
+            $bill->status = $req->status;
             $bill->note = $req->note;
+            $bill->delete = $req->delete;
             $bill->save();
 
             foreach($cart->items as $key => $val){

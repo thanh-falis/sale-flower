@@ -50,10 +50,10 @@
                 <!-- /.nav-second-level -->
             </li>
             <li>
-                <a href="admin/bill-detail/list"><i class="fa fa-bar-chart-o fa-fw"></i> Chi tiết hóa đơn<span class="fa arrow"></span></a>
+                <a href="admin/billdetail/list"><i class="fa fa-bar-chart-o fa-fw"></i> Chi tiết hóa đơn<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="admin/bill-detail/list">Danh Sách </a>
+                        <a href="admin/billdetail/list">Danh Sách </a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

@@ -18,48 +18,50 @@
     <div id="content">
         @if(Session::has('thongbao'))<div class="alert alert-success">{{Session::get('thongbao')}}</div>@endif
         <form action="dat-hang" method="post" class="beta-form-checkout">
-        @csrf
+            <input type="hidden" name="status" value="0" />
+            <input type="hidden" name="delete" value="0" />
+            @csrf
             <div class="row">
                 <div class="col-sm-6">
                     <h4>Đặt hàng</h4>
                     <div class="space20">&nbsp;</div>
+                    @if(Auth::guard('customer')->check())
+                        
+                        <div class="form-block">
+                            <label for="name">Họ tên*</label>
+                            <input type="text" id="name" name="name" value="{{Auth::guard('customer')->user()->name}}" readonly>
+                        </div>
 
-                    <div class="form-block">
-                        <label for="name">Họ tên*</label>
-                        <input type="text" id="name" name="name" value="$login->name" required>
-                    </div>
+                        <div class="form-block">
+                            <label>Giới tính </label>
+                            @if(Auth::guard('customer')->user()->gender == 'nam')
+                                <input id="gender" type="radio" class="input-radio" name="gender" value="nam" checked="checked" style="width: 10%"><span style="margin-right: 10%">Nam</span>
+                                <input id="gender" type="radio" class="input-radio" name="gender" value="nữ" style="width: 10%"><span>Nữ</span>
+                            @else
+                                <input id="gender" type="radio" class="input-radio" name="gender" value="nam" style="width: 10%"><span style="margin-right: 10%">Nam</span>
+                                <input id="gender" type="radio" class="input-radio" name="gender" value="nữ" checked="checked" style="width: 10%"><span>Nữ</span>
+                            @endif           
+                        </div>
 
-                    <div class="form-block">
-                        <label for="name">Email*</label>
-                        <input type="email" id="email" name="email" value="$login->name" required>
-                    </div>
+                        <div class="form-block">
+                            <label for="email">Email*</label>
+                            <input type="email" id="email" name="email" required value="{{Auth::guard('customer')->user()->email}}"  readonly>
+                        </div>
 
-                    <div class="form-block">
-                        <label>Giới tính </label>
-                        <input id="gender" type="radio" class="input-radio" name="gender" value="nam" checked="checked" style="width: 10%"><span style="margin-right: 10%">Nam</span>
-                        <input id="gender" type="radio" class="input-radio" name="gender" value="nữ" style="width: 10%"><span>Nữ</span>
-                                    
-                    </div>
+                        <div class="form-block">
+                            <label for="address">Địa chỉ*</label>
+                            <input type="text" id="address" name="address" value="{{Auth::guard('customer')->user()->address}}"  readonly>
+                        </div>
+                        
 
-                    <div class="form-block">
-                        <label for="email">Email*</label>
-                        <input type="email" id="email" name="email"required placeholder="expample@gmail.com">
-                    </div>
-
-                    <div class="form-block">
-                        <label for="address">Địa chỉ*</label>
-                        <input type="text" id="address" name="address" placeholder="Street Address" required>
-                    </div>
-                    
-
-                    <div class="form-block">
-                        <label for="phone">Điện thoại*</label>
-                        <input type="text" id="phone" name="phone" required>
-                    </div>
-                    
+                        <div class="form-block">
+                            <label for="phone">Điện thoại*</label>
+                            <input type="text" id="phone" name="phone" value="{{Auth::guard('customer')->user()->phone_number}}" readonly>
+                        </div>
+                     @endif
                     <div class="form-block">
                         <label for="notes">Ghi chú</label>
-                        <textarea id="notes" name="note"></textarea>
+                        <textarea id="notes" name="note" value="{{Auth::guard('customer')->user()->note}}"></textarea>
                     </div>
                 </div>
                 <div class="col-sm-6">

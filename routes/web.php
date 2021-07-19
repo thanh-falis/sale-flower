@@ -52,10 +52,8 @@ Route::group(['prefix'=>'admin'], function(){
         Route::get('delete/{id}', 'BillController@Delete');
     });
 
-    Route::group(['prefix'=>'bill-detail'], function(){
+    Route::group(['prefix'=>'billdetail'], function(){
         Route::get('list', 'BillDetailController@getList');
-        Route::get('edit/{id}', 'BillDetailController@getEdit');
-        Route::post('edit/{id}', 'BillDetailController@postEdit');
         Route::get('delete/{id}', 'BillDetailController@Delete');
     });
 
