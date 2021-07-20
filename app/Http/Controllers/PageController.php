@@ -124,6 +124,7 @@ class PageController extends Controller
                 $bill_detail->id_product = $key;
                 $bill_detail->quantity = $val['qty'];
                 $bill_detail->unit_price = $val['price']/$val['qty'];
+                $bill_detail->delete = $req->delete;
                 $bill_detail->save();
             }
             Session::forget('cart');
