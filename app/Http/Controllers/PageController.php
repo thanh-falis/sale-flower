@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Mail\SendMail;
 use App\Http\Requests;
 use App\Slide;
 use App\Product;
@@ -104,46 +105,42 @@ class PageController extends Controller
     
     public function postCheckout(Request $req)
     {
+        $to_email = $req->email;
+        $cart = Session::get('cart');
         
-            $to_email = $req->email;
-            $cart = Session::get('cart');
-            
-            $bill = new Bill;
-            $bill->id_customer = Auth::guard('customer')->user()->id;
-            $bill->date_order = date('Y-m-d');
-            $bill->total = $cart->totalPrice;
-            $bill->payment = $req->payment;
-            $bill->status = $req->status;
-            $bill->note = $req->note;
-            $bill->delete = $req->delete;
-            $bill->save();
+        $bill = new Bill;
+        $bill->id_customer = Auth::guard('customer')->user()->id;
+        $bill->date_order = date('Y-m-d');
+        $bill->total = $cart->totalPrice;
+        $bill->payment = $req->payment;
+        $bill->status = $req->status;
+        $bill->note = $req->note;
+        $bill->delete = $req->delete;
+        $bill->save();
 
-            foreach($cart->items as $key => $val){
-                $bill_detail = new BillDetail;
-                $bill_detail->id_bill = $bill->id;
-                $bill_detail->id_product = $key;
-                $bill_detail->quantity = $val['qty'];
-                $bill_detail->unit_price = $val['price']/$val['qty'];
-                $bill_detail->delete = $req->delete;
-                $bill_detail->save();
-            }
-            Session::forget('cart');
-            
-            $this->Sendmail($to_email);
-            return redirect()->back()->with('thongbao', 'Đặt hàng thành công, Quý khách vui lòng check Mail');
+        foreach($cart->items as $key => $val){
+            $bill_detail = new BillDetail;
+            $bill_detail->id_bill = $bill->id;
+            $bill_detail->id_product = $key;
+            $bill_detail->quantity = $val['qty'];
+            $bill_detail->unit_price = $val['price']/$val['qty'];
+            $bill_detail->delete = $req->delete;
+            $bill_detail->save();
+        }
+        $this->Sendmail();
+        Session::forget('cart');
+        return redirect()->back()->with('thongbao', 'Đặt hàng thành công, Quý khách vui lòng check Mail');
         
     }
 
-    public function Sendmail($to_email) {
-         //send mail
-        $to_name = "SunFlower";
-        $data = array("name"=>"Gửi mail đơn hàng","body"=>"Sunflower Đơn hàng đã đặt"); //body of sendmail.blade.php
-    
-        Mail::send('pages.sendmail',$data,function($message) use ($to_name,$to_email){
-            $message->to($to_email)->subject('test mail nhé');//send this mail with subject
-            $message->from($to_email,$to_name);//send from this mail
-        });
-        //--send mail
+    public function Sendmail() {
+        $to_email = Auth::guard('customer')->user()->email;
+        $details = [
+            'title' => 'Title: Mail from SunFlower',
+            'body' => 'Body: This is for send email for your order'
+        ];
+
+        \Mail::to($to_email)->send(new SendMail($details));
     }
     
     public function getLogin()
