@@ -16,33 +16,42 @@ class UserController extends Controller
         return view('admin.user.list',['user'=>$user]);
     }
 
-    // public function getEdit($id)
-    // {
-    //     $user = User::find($id);
-    //     return view('admin.user.change_password',['user'=>$user]);
-    // }
+    public function getEdit($id)
+    {
+        $user = User::find($id);
+        return view('admin.user.edit',['user'=>$user]);
+    }
     
-    // public function postEdit(Request $req, $id)
-    // {
-    //     $user = User::find($id);
+     public function postEdit(Request $req, $id)
+     {
+         $user = User::find($id);
 
-    //     $this->validate($req, 
-    //     [
-    //         'name'=>'required|min:3'
-    //     ],
-    //     [
-    //         'name.required'=>'Bạn chưa nhập loại sản phẩm',
-    //         'name.min'=>'Tên loại sản phẩm phải trên 3 ký tự'
-    //     ]
-    //     );
+         $this->validate($req,
+        [   
+            'full_name'=>'required',
+            'email'=>'required|unique:users,email',
+            'address'=>'required',
+            'phone'=>'required'
+        ],
+        [
+            'full_name.required'=>'Vui lòng nhập họ tên',
+            'email.required'=>'Vui lòng nhập email',
+            'email.email'=>'Không đúng định dạng email',
+            'email.unique'=>'Email đã có người sử dụng',
+            'address.required'=>'Vui lòng nhập địa chỉ chính xác và đầy đủ',
+            'phone.required'=>'Vui lòng nhập số điện thoại'
+        ]
+        );
 
-    //     $type->name = $req->name;
-    //     $type->description = $req->description;
-    //     $type->delete = $req->delete;  
-    //     $type->update(); 
+         $user->full_name = $req->full_name;
+         $user->email = $req->email;
+         $user->phone = $req->phone;  
+         $user->address = $req->address;
+         $user->remember_token = $req->_token;  
+         $user->update(); 
 
-    //     return redirect('admin/producttype/edit/'.$id)->with('thongbao','Sửa thành công');
-    // } 
+        return redirect('admin/user/edit/'.$id)->with('thongbao','Sửa thành công');
+     } 
 
     public function getLoginAdmin()
     {
@@ -117,5 +126,39 @@ class UserController extends Controller
         $user->remember_token = $req->_token;
         $user->save();
         return redirect()->back()->with('success', 'Thêm thành công');
+    }
+
+    public function getChange_Password($id)
+    {
+        $user = User::find($id);
+        return view('admin.user.change_password',['user'=>$user]);
+    }
+
+    public function postChange_Password(Request $req $id)
+    {
+        $this->validate($req,
+        [
+            'current_password'=>'required',
+            'new_password'=>'required|min:6|max:20',
+            're_new_password'=>'required|same:new_password'
+        ],
+        [
+            'current_password.required'=>'Vui vui lòng nhập mật khẩu hiện tại',
+            'new_password.required'=>'Vui lòng nhập mật khẩu mới',
+            'new_password.min'=>'Mật khẩu tối thiểu cần 6 kí tự',
+            'new_password.max'=>'Mật khẩu tối ta 20 kí tự',
+            're_new_password.same'=>'Mật khẩu mới không trùng khớp'
+        ]
+        );
+
+        $user = User::find($id);
+        $password = $user->password;
+        $current_pass = Hash::make($req->curent_password);
+        if($current_pass != $password){
+            return redirect()->back()->with('thongbao','Mật khẩu hiện tại không trùng khớp');
+        }
+        $user->password = $req->new_password;
+        $user->update();
+        return redirect()->back()->with('thongbao', 'Đổi mật khẩu thành công');
     }
 }

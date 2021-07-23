@@ -20,7 +20,7 @@
                                 <th>Điện thoại</th>
                                 <th>Email</th>
                                 <th>Địa chỉ</th>
-                                <th>Quyền</th>
+                                <th>Đổi Mật Khẩu</th>
                                 <th>Xóa</th>
                                 <th>Sửa</th>
                             </tr>
@@ -33,7 +33,7 @@
                                     <td>{{$user->email}}</td>
                                     <td>{{$user->phone}}</td>
                                     <td>{{$user->address}}</td>
-                                    <td>{{$user->power}}</td>
+                                    <td class="center"><i class="fa fa-pencil fa-fw"></i><a href="admin/user/change-password/{{$user->id}}"> Đổi Mật Khẩu</a></td>
                                     <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a href="admin/user/delete/{{$user->id}}"> Xóa</a></td>
                                     <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="admin/user/edit/{{$user->id}}"> Sửa</a></td>
                                 </tr>

@@ -32,19 +32,29 @@
                                 <label>User</label>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" name="full_name" value="{{$user->full_name}}" redonly visible/>
+                                <label>UserName</label>
+                                <input class="form-control" name="full_name" value="{{$user->full_name}}" autofocus/>
                             </div>   
                             <div class="form-group">
-                                <label>Mô tả</label>
-                                <textarea class="form-control" name="email" value="{{$uer->email}}" reaonly></textarea>
+                                <label>Email</label>
+                                <input class="form-control" name="email" value="{{$user->email}}"/>
                             </div>
+
                             <div class="form-group">
-                                <label>Trạng thái</label>
-                                <select name="delete">
-                                    <option value="{{$type->delete}}">Không</option>
-                                    <option value="1">Xóa</option>
-                                </select>
-                            </div>                       
+                                <label>Password</label>
+                                <input class="form-control" type="password" name="password" value="{{$user->password}}" readonly/>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Điện Thoại</label>
+                                <input class="form-control" name="phone" value="{{$user->phone}}" reaonly/>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Địa Chỉ</label>
+                                <input class="form-control" name="address" value="{{$user->address}}" reaonly/>
+                            </div>
+        
                             <button type="submit" class="btn btn-default">Sửa</button>
                             <button type="reset" class="btn btn-default">Làm Mới</button>
                         <form>
