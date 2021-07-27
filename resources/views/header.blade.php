@@ -35,7 +35,7 @@
 		<div class="header-body">
 			<div class="container beta-relative">
 				<div class="pull-left">
-					<a href="/" id="logo">Sun Flower</a>
+					<a href="/" id="logo"><img src="image/logo/logo.jpg"></a>
 				</div>
 				<div class="pull-right beta-components space-left ov">
 					<div class="space10">&nbsp;</div>

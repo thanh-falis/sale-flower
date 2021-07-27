@@ -92,7 +92,7 @@ class UserController extends Controller
         return view('admin.user.add');
     }
 
-    public function postAdd()
+    public function postAdd(Request $req)
     {
         $this->validate($req,
         [
@@ -134,7 +134,7 @@ class UserController extends Controller
         return view('admin.user.change_password',['user'=>$user]);
     }
 
-    public function postChange_Password(Request $req $id)
+    public function postChange_Password(Request $req, $id)
     {
         $this->validate($req,
         [
