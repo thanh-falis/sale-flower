@@ -37,9 +37,10 @@ class PageController extends Controller
 
     public function Loaisanpham($type)
     {
+        $product_type = ProductType::all();
         $Type = Product::where('id_type',$type)->get();
         $other_product = Product::where('id_type','<>',$type)->paginate(3);
-        return view('pages.loaisanpham',['Type'=>$Type, 'other_product'=>$other_product]);
+        return view('pages.loaisanpham',['Type'=>$Type, 'other_product'=>$other_product, 'product_type'=>$product_type]);
     }
 
     public function ChitietSP(Request $req)
