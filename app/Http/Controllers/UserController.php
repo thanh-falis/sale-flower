@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use Hash;
 use App\Http\Requests;
 use App\User;
 
@@ -108,7 +108,7 @@ class UserController extends Controller
             'email.required'=>'Vui lòng nhập email',
             'email.email'=>'Không đúng định dạng email',
             'email.unique'=>'Email đã có người sử dụng',
-            'password.required'=>'Vui vui lòng nhập mật khẩu',
+            'password.required'=>'Vui lòng nhập mật khẩu',
             'repassword.same'=>'Mật khẩu không trùng khớp',
             'password.min'=>'Mật khẩu ít nhất 6 kí tự',
             'password.max'=>'Mật khẩu tối đa 20 kí tự',
@@ -118,14 +118,14 @@ class UserController extends Controller
         );
 
         $user = new User;
-        $user->name = $req->name;
+        $user->full_name = $req->full_name;
         $user->email = $req->email;
         $user->password = Hash::make($req->password);
         $user->phone = $req->phone;
         $user->address = $req->address;
         $user->remember_token = $req->_token;
         $user->save();
-        return redirect()->back()->with('success', 'Thêm thành công');
+        return redirect()->back()->with('thongbao', 'Thêm thành công');
     }
 
     public function getChange_Password($id)
@@ -143,7 +143,7 @@ class UserController extends Controller
             're_new_password'=>'required|same:new_password'
         ],
         [
-            'current_password.required'=>'Vui vui lòng nhập mật khẩu hiện tại',
+            'current_password.required'=>'Vui lòng nhập mật khẩu hiện tại',
             'new_password.required'=>'Vui lòng nhập mật khẩu mới',
             'new_password.min'=>'Mật khẩu tối thiểu cần 6 kí tự',
             'new_password.max'=>'Mật khẩu tối ta 20 kí tự',
@@ -152,13 +152,15 @@ class UserController extends Controller
         );
 
         $user = User::find($id);
-        $password = $user->password;
-        $current_pass = Hash::make($req->curent_password);
-        if($current_pass != $password){
-            return redirect()->back()->with('thongbao','Mật khẩu hiện tại không trùng khớp');
+        $current_user = auth()->user();
+        if(Hash::check($req->current_password, $current_user->password)){
+            $user->password = $req->new_password;
+            $user->update();
+            return redirect()->back()->with('thongbao','Đổi mật khẩu thành công');
         }
-        $user->password = $req->new_password;
-        $user->update();
-        return redirect()->back()->with('thongbao', 'Đổi mật khẩu thành công');
+        else {
+            return redirect()->back()->with('error', 'Đổi mật khẩu không thành công');
+        }
+        
     }
 }

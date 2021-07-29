@@ -20,9 +20,9 @@
                             </div>
                         @endif
 
-                        @if(session('success'))
+                        @if(session('thongbao'))
                             <div class="alert alert-success">
-                                {{session('message')}}
+                                {{session('thongbao')}}
                             </div>
                         @endif
                         <form action="admin/user/add" method="POST">
@@ -40,12 +40,12 @@
 
                             <div class="form-group">
                                 <label>Mât khẩu *</label>
-                                <input class="form-control" name="passwprd" placeholder="Nhập Mật Khẩu"/>
+                                <input type="password" class="form-control" name="password" placeholder="Nhập Mật Khẩu"/>
                             </div>
 
                             <div class="form-group">
                                 <label>Nhập Lại mật khẩu *</label>
-                                <input class="form-control" name="repassword" placeholder="Nhập Lại Mật Khẩu"/>
+                                <input type="password" class="form-control" name="repassword" placeholder="Nhập Lại Mật Khẩu"/>
                             </div>
 
                             <div class="form-group">
