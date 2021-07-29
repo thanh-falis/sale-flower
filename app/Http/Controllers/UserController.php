@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function getList()
     {
-        $user = User::all();
+        $user = User::where('delete',0)->get();
         return view('admin.user.list',['user'=>$user]);
     }
 
@@ -124,6 +124,7 @@ class UserController extends Controller
         $user->phone = $req->phone;
         $user->address = $req->address;
         $user->remember_token = $req->_token;
+        $user->delete = $req->delete;
         $user->save();
         return redirect()->back()->with('thongbao', 'Thêm thành công');
     }
@@ -162,5 +163,13 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Đổi mật khẩu không thành công');
         }
         
+    }
+
+    public function Delete_User($id)
+    {
+        $user = User::find($id);
+        $user->delete = 1;
+        $user->update();
+        return redirect('admin/user/list')->with('thongbao','Xóa thành công');
     }
 }

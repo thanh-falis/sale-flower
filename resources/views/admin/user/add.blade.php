@@ -27,6 +27,7 @@
                         @endif
                         <form action="admin/user/add" method="POST">
                          <input type="hidden" name="_token" value="{{csrf_token()}}" />
+                         <input type="hidden" name="delete" value="0" />
                             
                             <div class="form-group">
                                 <label>Họ tên *</label>

@@ -81,7 +81,7 @@ Route::group(['prefix'=>'admin', 'middleware'=>'adminLogin'], function(){
         Route::post('add', 'UserController@postAdd');
         Route::get('change-password/{id}', 'UserController@getChange_Password');    
         Route::post('change-password/{id}', 'UserController@postChange_Password');    
-        Route::get('delete/{id}', 'UserController@Delete');
+        Route::get('delete/{id}', 'UserController@Delete_User');
     });
 });
 //End Roure Admin
